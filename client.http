@@ -1,4 +1,37 @@
-GET http://localhost:4000/api/pokemon
+GET http://localhost:4000/api/animals
 
 ###
-GET http://localhost:4000/api/pokemon/1
+
+GET http://localhost:4000/api/animals/1
+
+###
+
+POST http://localhost:4000/api/animals
+Content-Type: application/json
+
+{
+  "number": 6,
+  "name": " ",
+  "race": " ",
+  "personality": " ",
+  "availability": " ",
+  "picture": "url6"
+}
+
+###
+
+DELETE http://localhost:4000/api/animals/6
+
+###
+
+PUT http://localhost:4000/api/animals/2
+Content-Type: application/json
+
+{
+  "number": 2,
+  "name": " ",
+  "race": " ",
+  "personality": " ",
+  "availability": " ",
+  "picture": "url2"
+}
