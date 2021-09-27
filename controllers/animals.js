@@ -2,20 +2,28 @@ import animalsData from '../db/data/animals.js'
 
 import Animals from '../models/animals.js'
 
+import { NotFound } from '../lib/errors.js'
+
 async function index(req, res) {
   const animalsList = await Animals.find()
 
   res.status(200).json(animalsList)
 }
 
-function show(req, res) {
-  const id = Number(req.params.id)
+async function show(req, res, next) {
+  try {
+    const id = req.params.id
+  
+    const animals = await animalsData.findbyId(id)
 
-  const animals = animalsData.find((animal) => {
-    return animal.number === id
-  })
-
-  res.status(200).json(animals)
+    if (!animals) {
+      throw new NotFound('No animal found.')
+    }
+  
+    res.status(200).json(animals)
+  } catch (e) {
+    next(e)
+  }
 }
 
 async function create(req, res) {
@@ -24,32 +32,19 @@ async function create(req, res) {
   res.status(201).json(newAnimal)
 }
 
-function remove(req, res) {
-  const id = Number(req.params.id)
-
-  const animalIndexToRemove = animalsData.findIndex((animal) => {
-    return id === animal.number
-  })
-
-  if (animalIndexToRemove === -1) {
-    return res.json({ 'message': 'No animal found' })
-  }
-
-  animalsData.splice(animalIndexToRemove, 1)
+async function remove(req, res) {
+  await Animals.findByIdAndRemove(req.params.id)
 
   res.sendStatus(204)
 }
 
-function update(req, res) {
-  const id = Number(req.params.id)
+async function update(req, res) {
+  const id = req.params.id
+  const body = req.body
 
-  const animalIndexToUpdate = animalsData.findIndex((animal) => {
-    return id === animal.number
-  })
+  const updatedAnimal = await Animals.findOneAndUpdate({ _id: id }, body, { new: true })
 
-  animalsData.splice(animalIndexToUpdate, 1, req.body)
-
-  res.status(202).json(req.body)
+  res.status(202).json(updatedAnimal)
 }
 
 export default {
