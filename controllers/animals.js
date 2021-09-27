@@ -1,5 +1,3 @@
-import animalsData from '../db/data/animals.js'
-
 import Animals from '../models/animals.js'
 
 import { NotFound } from '../lib/errors.js'
@@ -14,7 +12,7 @@ async function show(req, res, next) {
   try {
     const id = req.params.id
   
-    const animals = await animalsData.findbyId(id)
+    const animals = await Animals.findbyId(id)
 
     if (!animals) {
       throw new NotFound('No animal found.')
