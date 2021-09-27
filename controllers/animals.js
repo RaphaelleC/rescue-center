@@ -1,7 +1,11 @@
 import animalsData from '../db/data/animals.js'
 
-function index(req, res) {
-  res.status(200).json(animalsData)
+import Animals from '../models/animals.js'
+
+async function index(req, res) {
+  const animalsList = await Animals.find()
+
+  res.status(200).json(animalsList)
 }
 
 function show(req, res) {
@@ -14,10 +18,8 @@ function show(req, res) {
   res.status(200).json(animals)
 }
 
-function create(req, res) {
-  const newAnimal = req.body
-
-  animalsData.push(newAnimal)
+async function create(req, res) {
+  const newAnimal = await Animals.create(req.body)
 
   res.status(201).json(newAnimal)
 }
